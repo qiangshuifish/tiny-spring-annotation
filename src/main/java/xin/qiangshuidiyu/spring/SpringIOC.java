@@ -1,7 +1,6 @@
 package xin.qiangshuidiyu.spring;
 
 import org.junit.Test;
-import xin.qiangshuidiyu.spring.BeanReference;
 import xin.qiangshuidiyu.spring.app.HelloWorldService;
 import xin.qiangshuidiyu.spring.app.OutputService;
 import xin.qiangshuidiyu.spring.beans.BeanDefinition;
@@ -22,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wpy
  * @date 2018/6/13 15:06
  */
-public class Spring {
+public class SpringIOC {
 
     private final List<String> classNames = new ArrayList<>();
     private final Map<String,BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
