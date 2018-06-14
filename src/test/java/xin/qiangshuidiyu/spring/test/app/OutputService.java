@@ -1,4 +1,4 @@
-package xin.qiangshuidiyu.spring.app;
+package xin.qiangshuidiyu.spring.test.app;
 
 import xin.qiangshuidiyu.spring.beans.annotation.Component;
 

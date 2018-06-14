@@ -1,4 +1,4 @@
-package xin.qiangshuidiyu.spring.app;
+package xin.qiangshuidiyu.spring.test.app;
 
 import xin.qiangshuidiyu.spring.beans.annotation.Component;
 
@@ -16,5 +16,9 @@ public class HelloWorldService {
 
     public void helloWorld(){
         System.out.println("hello World");
+    }
+
+    public void output(){
+        outputService.output();
     }
 }
