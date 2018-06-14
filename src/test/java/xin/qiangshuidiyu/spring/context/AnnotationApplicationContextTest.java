@@ -8,7 +8,7 @@ public class AnnotationApplicationContextTest {
 
     @Test
     public void test() throws Exception {
-        AbstracApplicationContext applicationContext = new AnnotationApplicationContext("xin");
+        AbstractApplicationContext applicationContext = new AnnotationApplicationContext("xin");
 
         HelloWorldService helloWorldService = applicationContext.getBean("helloWorldService");
         OutputService outputService = applicationContext.getBean("outputService");

@@ -6,12 +6,12 @@ import xin.qiangshuidiyu.spring.beans.factory.AbstractBeanFactory;
  * @author wpy
  * @date 2018/6/14 15:39
  */
-public abstract class AbstracApplicationContext implements ApplicationContext {
+public abstract class AbstractApplicationContext implements ApplicationContext {
 
 
     private AbstractBeanFactory beanFactory;
 
-    public AbstracApplicationContext(AbstractBeanFactory beanFactory) {
+    public AbstractApplicationContext(AbstractBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -30,6 +30,11 @@ public abstract class AbstracApplicationContext implements ApplicationContext {
         loadBeanDefinitions(beanFactory);
     }
 
+    /**
+     * 加载 beanDefinitions
+     * @param beanFactory
+     * @throws Exception
+     */
     protected abstract void loadBeanDefinitions(AbstractBeanFactory beanFactory) throws Exception;
 
 
