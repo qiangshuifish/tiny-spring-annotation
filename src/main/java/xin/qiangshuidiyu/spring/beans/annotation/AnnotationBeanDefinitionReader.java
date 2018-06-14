@@ -92,19 +92,10 @@ public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader
 
                 BeanReference beanReference = new BeanReference(fieldComponentName);
                 beanDefinition.getPropertyValues()
-                        .addPropertyValue(new PropertyValue(fieldComponentName,beanReference));
+                        .addPropertyValue(new PropertyValue(field.getName(),beanReference));
             }
             // 处理其他基础属性
         }
-    }
-
-    /**
-     * 获取已注册的 beanDefinition
-     * @param className
-     * @return
-     */
-    private BeanDefinition getBeanDefinition(String className) {
-        return this.getRegistry().get(className);
     }
 
     /**

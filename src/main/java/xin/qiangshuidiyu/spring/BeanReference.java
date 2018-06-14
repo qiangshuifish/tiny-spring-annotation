@@ -6,8 +6,12 @@ package xin.qiangshuidiyu.spring;
  */
 
 public class BeanReference {
-    public String name;
-    public Object object;
+
+    /**
+     * ref 到的bean的id
+     */
+    private String name;
+    private Object object;
 
     public BeanReference(String name) {
         this.name = name;

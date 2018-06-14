@@ -37,6 +37,10 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         Collection<BeanDefinition> values = beanDefinitionMap.values();
         for (BeanDefinition beanDefinition : values) {
             if(clazz.isAssignableFrom(beanDefinition.getBeanClass())){
+                if(Objects.isNull(beanDefinition.getBean())){
+                    Object bean = doCreateBean(beanDefinition);
+                    beanDefinition.setBean(bean);
+                }
                 t = (T) beanDefinition.getBean();
             }
         }

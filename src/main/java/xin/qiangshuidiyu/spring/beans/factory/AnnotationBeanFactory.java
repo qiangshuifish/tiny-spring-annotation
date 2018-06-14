@@ -23,7 +23,6 @@ public class AnnotationBeanFactory extends AbstractBeanFactory {
                 BeanReference beanReference = (BeanReference) value;
 
                 value = getBean(beanReference.getName());
-
                 Field field = bean.getClass().getDeclaredField(propertyValue.getName());
                 field.setAccessible(true);
                 field.set(bean,value);
