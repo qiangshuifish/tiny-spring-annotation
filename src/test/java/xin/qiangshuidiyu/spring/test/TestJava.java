@@ -1,6 +1,6 @@
 package xin.qiangshuidiyu.spring.test;
 
-import xin.qiangshuidiyu.spring.test.app.HelloWorldService;
+import xin.qiangshuidiyu.spring.test.app.impl.HelloWorldServiceImpl;
 
 import java.lang.reflect.Field;
 
@@ -10,7 +10,10 @@ import java.lang.reflect.Field;
  */
 public class TestJava {
     public static void main(String[] args) {
-        Class<HelloWorldService> clazz = HelloWorldService.class;
+        Class<HelloWorldServiceImpl> clazz = HelloWorldServiceImpl.class;
+
+
+        System.out.println(clazz.isAssignableFrom(HelloWorldServiceImpl.class));
 
 //        System.out.println(clazz.getName());
         System.out.println(clazz.getCanonicalName());

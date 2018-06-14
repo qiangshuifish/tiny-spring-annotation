@@ -6,10 +6,10 @@ import xin.qiangshuidiyu.spring.beans.annotation.AnnotationBeanDefinitionReader;
 import xin.qiangshuidiyu.spring.beans.io.ResourceLoader;
 import xin.qiangshuidiyu.spring.test.app.HelloWorldService;
 import xin.qiangshuidiyu.spring.test.app.OutputService;
+import xin.qiangshuidiyu.spring.test.app.impl.HelloWorldServiceImpl;
+import xin.qiangshuidiyu.spring.test.app.impl.OutputServiceImpl;
 
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 public class AnnotationBeanFactoryTest {
 
@@ -29,19 +29,19 @@ public class AnnotationBeanFactoryTest {
 
 
         System.out.println("================按类型===============");
-        HelloWorldService helloWorldService = beanFactory.getBean(HelloWorldService.class);
-        OutputService outputService = beanFactory.getBean(OutputService.class);
+        HelloWorldService helloWorldServiceImpl = beanFactory.getBean(HelloWorldService.class);
+        OutputService outputServiceImpl = beanFactory.getBean(OutputService.class);
 
-        helloWorldService.helloWorld();
-        helloWorldService.output();
-        outputService.output();
+        helloWorldServiceImpl.helloWorld();
+        helloWorldServiceImpl.output();
+        outputServiceImpl.output();
 
         System.out.println("================按名字================");
-        HelloWorldService helloWorldService1 = beanFactory.getBean("helloWorldService");
-        OutputService outputService1 = beanFactory.getBean("outputService");
-        helloWorldService1.helloWorld();
-        helloWorldService1.output();
-        outputService1.output();
+        HelloWorldServiceImpl helloWorldServiceImpl1 = beanFactory.getBean("helloWorldServiceImpl");
+        OutputServiceImpl outputServiceImpl1 = beanFactory.getBean("outputServiceImpl");
+        helloWorldServiceImpl1.helloWorld();
+        helloWorldServiceImpl1.output();
+        outputServiceImpl1.output();
 
 
     }

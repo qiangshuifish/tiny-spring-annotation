@@ -1,8 +1,8 @@
 package xin.qiangshuidiyu.spring.beans.annotation;
 
 import org.junit.Test;
-import xin.qiangshuidiyu.spring.test.app.HelloWorldService;
-import xin.qiangshuidiyu.spring.test.app.OutputService;
+import xin.qiangshuidiyu.spring.test.app.impl.HelloWorldServiceImpl;
+import xin.qiangshuidiyu.spring.test.app.impl.OutputServiceImpl;
 import xin.qiangshuidiyu.spring.beans.io.ResourceLoader;
 
 public class AnnotationBeanDefinitionReaderTest {
@@ -13,11 +13,11 @@ public class AnnotationBeanDefinitionReaderTest {
         reader.loadDefinitionReader("xin");
 
         System.out.println(reader.getRegistry());
-        HelloWorldService helloWorldService = (HelloWorldService) reader.getRegistry().get("helloWorldService").getBean();
-        OutputService outputService = (OutputService) reader.getRegistry().get("outputService").getBean();
+        HelloWorldServiceImpl helloWorldServiceImpl = (HelloWorldServiceImpl) reader.getRegistry().get("helloWorldServiceImpl").getBean();
+        OutputServiceImpl outputServiceImpl = (OutputServiceImpl) reader.getRegistry().get("outputServiceImpl").getBean();
 
         // 应该为 null
-        System.out.println(helloWorldService);
-        System.out.println(outputService);
+        System.out.println(helloWorldServiceImpl);
+        System.out.println(outputServiceImpl);
     }
 }

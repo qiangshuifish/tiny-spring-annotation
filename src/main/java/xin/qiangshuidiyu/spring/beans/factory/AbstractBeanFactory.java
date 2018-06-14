@@ -2,8 +2,10 @@ package xin.qiangshuidiyu.spring.beans.factory;
 
 import xin.qiangshuidiyu.spring.beans.BeanDefinition;
 
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @author wpy
@@ -19,11 +21,14 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getBean(String name) throws Exception {
+
         BeanDefinition beanDefinition = beanDefinitionMap.get(name);
         assert Objects.nonNull(beanDefinition) : "没有：" + name;
 
         Object bean = beanDefinition.getBean();
+        // 如果是没有生成对象的，先创建对象
         if (Objects.isNull(bean)) {
+            //创建对象
             bean = doCreateBean(beanDefinition);
             beanDefinition.setBean(bean);
         }
@@ -33,21 +38,55 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getBean(Class<T> clazz) throws Exception {
-        T t = null;
-        Collection<BeanDefinition> values = beanDefinitionMap.values();
-        for (BeanDefinition beanDefinition : values) {
-            if(clazz.isAssignableFrom(beanDefinition.getBeanClass())){
-                if(Objects.isNull(beanDefinition.getBean())){
-                    Object bean = doCreateBean(beanDefinition);
-                    beanDefinition.setBean(bean);
-                }
-                t = (T) beanDefinition.getBean();
-            }
+        List<T> beans = getBeans(clazz);
+        if(beans.size() == 1){
+            return beans.get(0);
         }
-        assert Objects.nonNull(t) :"没有：" + clazz.getName();
-        return t;
+        // 是否为借口或者抽象类
+        if(clazz.isInterface() ||  Modifier.isAbstract(clazz.getModifiers())){
+            assert beans.size() == 1 : "包含多个"+clazz.getSimpleName()+"类型: "+beans.toString();
+        }
+        List<T> collect = beans.stream()
+                .filter(o -> o.getClass().equals(clazz))
+                .collect(Collectors.toList());
+        assert collect.size() == 1 : "包含多个"+clazz.getSimpleName()+"类型: "+beans.toString();
+        return collect.get(0);
     }
 
+
+    /**
+     * 获取 clazz 或其子类所有的实例
+     * @param clazz
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getBeans(Class<T> clazz)throws Exception{
+        List<T> list = new ArrayList<>();
+        // 查找所有扫描到的类中，是否有clazz或其子类
+        Collection<BeanDefinition> values = beanDefinitionMap.values();
+        for (BeanDefinition beanDefinition : values) {
+            // 如果为clazz或者其子类
+            if(clazz.isAssignableFrom(beanDefinition.getBeanClass())){
+                //还没有创建对象就创建对象
+                if(Objects.isNull(beanDefinition.getBean())){
+                    T bean = (T) doCreateBean(beanDefinition);
+                    beanDefinition.setBean(bean);
+                }
+                list.add((T) beanDefinition.getBean());
+            }
+        }
+        assert !list.isEmpty() :"没有：" + clazz.getName()+"或其实例";
+        return list;
+    }
+
+    /**
+     * 工程创建对象实例
+     * @param beanDefinition
+     * @return
+     * @throws Exception
+     */
     private Object doCreateBean(BeanDefinition beanDefinition) throws Exception {
         Object bean = createBeanInstance(beanDefinition);
         beanDefinition.setBean(bean);
