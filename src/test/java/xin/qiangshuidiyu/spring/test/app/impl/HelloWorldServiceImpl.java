@@ -1,6 +1,7 @@
 package xin.qiangshuidiyu.spring.test.app.impl;
 
 import xin.qiangshuidiyu.spring.beans.annotation.Component;
+import xin.qiangshuidiyu.spring.beans.annotation.Scope;
 import xin.qiangshuidiyu.spring.beans.annotation.Value;
 import xin.qiangshuidiyu.spring.test.app.HelloWorldService;
 

@@ -1,6 +1,7 @@
 package xin.qiangshuidiyu.spring.beans.factory;
 
 import xin.qiangshuidiyu.spring.beans.BeanDefinition;
+import xin.qiangshuidiyu.spring.beans.annotation.Scope;
 
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -31,8 +32,11 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             //创建对象
             bean = doCreateBean(beanDefinition);
             beanDefinition.setBean(bean);
+        }else {
+            recreateByScope(beanDefinition);
         }
-        return (T) bean;
+
+        return (T) beanDefinition.getBean();
     }
 
     @SuppressWarnings("unchecked")
@@ -73,12 +77,27 @@ public abstract class AbstractBeanFactory implements BeanFactory {
                 if(Objects.isNull(beanDefinition.getBean())){
                     T bean = (T) doCreateBean(beanDefinition);
                     beanDefinition.setBean(bean);
+                }else{
+                    recreateByScope(beanDefinition);
                 }
                 list.add((T) beanDefinition.getBean());
             }
         }
         assert !list.isEmpty() :"没有：" + clazz.getName()+"或其实例";
         return list;
+    }
+
+    /**
+     * 根据 Scope 的值判断是否需要重新创建对象
+     * @param beanDefinition
+     * @throws Exception
+     */
+    private void recreateByScope(BeanDefinition beanDefinition) throws Exception {
+        Scope scope = beanDefinition.getBeanClass().getAnnotation(Scope.class);
+        if(Objects.nonNull(scope) && scope.value().equals(Scope.SCOPE_PROTOTYPE)){
+            Object bean = doCreateBean(beanDefinition);
+            beanDefinition.setBean(bean);
+        }
     }
 
     /**
@@ -107,6 +126,17 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     public void registerBeanDefintion(String name, BeanDefinition beanDefinition) {
         beanDefinitionMap.put(name, beanDefinition);
         beanDefinitionNames.add(name);
+    }
+
+
+    /**
+     * 预先加载所有的 bean
+     * @throws Exception
+     */
+    public void preInstantiateSingletons() throws Exception {
+        for (String definitionName : beanDefinitionNames) {
+            getBean(definitionName);
+        }
     }
 
 
