@@ -1,5 +1,6 @@
 package xin.qiangshuidiyu.spring.beans.annotation;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import xin.qiangshuidiyu.spring.BeanReference;
 import xin.qiangshuidiyu.spring.beans.AbstractBeanDefinitionReader;
@@ -10,6 +11,8 @@ import xin.qiangshuidiyu.spring.beans.io.UrlResource;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
@@ -94,9 +97,25 @@ public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader
                 beanDefinition.getPropertyValues()
                         .addPropertyValue(new PropertyValue(field.getName(),beanReference));
             }
-            // 处理其他基础属性
+
+            Value value = field.getAnnotation(Value.class);
+            if(Objects.nonNull(value)){
+                if(StringUtils.isNoneBlank(value.value()) && value.value().matches("\\$\\{(.+?)}")){
+                    String valueName = value.value()
+                            .replace("$", "")
+                            .replace("{", "")
+                            .replace("}", "");
+                    if(field.getType().equals(String.class)){
+                        beanDefinition.getPropertyValues()
+                                .addPropertyValue(new PropertyValue(field.getName(),getProperties().getProperty(valueName)));
+                    }
+                    // 处理其他基础属性
+                }
+            }
         }
     }
+
+
 
     /**
      * 注册 beanDefinition
@@ -129,5 +148,11 @@ public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader
                 }
             }
         }
+    }
+
+    @Override
+    public void loadPropertiesReader(String fileName) throws IOException {
+        InputStream inputStream = this.getResourceLoader().getResource(fileName).getInputStream();
+        this.getProperties().load(inputStream);
     }
 }

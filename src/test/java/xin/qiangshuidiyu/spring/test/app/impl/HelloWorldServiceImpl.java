@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 @Component
 public class HelloWorldServiceImpl implements HelloWorldService {
 
-    @Value("hello-world")
+    @Value("${hello-world}")
     private String text;
 
     @Resource
@@ -21,7 +21,7 @@ public class HelloWorldServiceImpl implements HelloWorldService {
 
     @Override
     public void helloWorld(){
-        System.out.println("hello World");
+        System.out.println(text);
     }
 
     @Override

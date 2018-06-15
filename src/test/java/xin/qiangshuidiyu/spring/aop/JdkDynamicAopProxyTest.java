@@ -1,14 +1,10 @@
 package xin.qiangshuidiyu.spring.aop;
 
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
-import xin.qiangshuidiyu.spring.beans.factory.AnnotationBeanFactory;
 import xin.qiangshuidiyu.spring.context.AnnotationApplicationContext;
 import xin.qiangshuidiyu.spring.context.ApplicationContext;
 import xin.qiangshuidiyu.spring.test.app.HelloWorldService;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class JdkDynamicAopProxyTest {

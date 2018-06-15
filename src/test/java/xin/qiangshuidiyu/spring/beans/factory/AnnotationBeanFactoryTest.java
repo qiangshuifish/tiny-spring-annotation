@@ -18,7 +18,8 @@ public class AnnotationBeanFactoryTest {
 
         AnnotationBeanFactory beanFactory = new AnnotationBeanFactory();
         AnnotationBeanDefinitionReader reader = new AnnotationBeanDefinitionReader(new ResourceLoader());
-
+        //需要先加载 application.properties文件，才能确保能赋值
+        reader.loadPropertiesReader("application.properties");
         reader.loadDefinitionReader("xin");
 
         for (Map.Entry<String, BeanDefinition> beanDefinitionEntry : reader.getRegistry().entrySet()) {
