@@ -1,6 +1,9 @@
 package xin.qiangshuidiyu.spring.context;
 
+import xin.qiangshuidiyu.spring.aop.BeanPostProcessor;
 import xin.qiangshuidiyu.spring.beans.factory.AbstractBeanFactory;
+
+import java.util.List;
 
 /**
  * @author wpy
@@ -27,7 +30,17 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 
 
     public void refresh() throws Exception{
-        loadBeanDefinitions(beanFactory);
+        // 加载到所有bean
+        loadBeanDefinitions(this.beanFactory);
+        //优先初始化 所有的 bean 前后置处理器
+        registerBeanPostProcessors(this.beanFactory);
+        // 初始化所有对象
+        beanFactory.preInstantiateSingletons();
+    }
+
+    protected void registerBeanPostProcessors(AbstractBeanFactory beanFactory) throws Exception {
+        List<BeanPostProcessor> beans = beanFactory.getBeans(BeanPostProcessor.class);
+        beans.forEach(beanPostProcessor -> beanFactory.addBeanPostProcessor(beanPostProcessor));
     }
 
     /**

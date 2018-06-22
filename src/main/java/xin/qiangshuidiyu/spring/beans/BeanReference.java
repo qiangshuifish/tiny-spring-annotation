@@ -1,4 +1,4 @@
-package xin.qiangshuidiyu.spring;
+package xin.qiangshuidiyu.spring.beans;
 
 /**
  * @author wpy
@@ -12,6 +12,7 @@ public class BeanReference {
      */
     private String name;
     private Object object;
+
 
     public BeanReference(String name) {
         this.name = name;

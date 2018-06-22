@@ -42,7 +42,7 @@ public class AnnotationApplicationContext extends AbstractApplicationContext {
 
         // 加载完毕之后 把信息从AnnotationBeanDefinitionReader 复制到工程里头去生成bean
         for (Map.Entry<String, BeanDefinition> beanDefinitionEntry : reader.getRegistry().entrySet()) {
-            beanFactory.registerBeanDefintion(beanDefinitionEntry.getKey(),beanDefinitionEntry.getValue());
+            beanFactory.registerBeanBeanDefinition(beanDefinitionEntry.getKey(),beanDefinitionEntry.getValue());
         }
     }
 }

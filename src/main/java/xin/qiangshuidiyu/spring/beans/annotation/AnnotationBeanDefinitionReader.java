@@ -2,7 +2,8 @@ package xin.qiangshuidiyu.spring.beans.annotation;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
-import xin.qiangshuidiyu.spring.BeanReference;
+import xin.qiangshuidiyu.spring.beans.MethodReference;
+import xin.qiangshuidiyu.spring.beans.BeanReference;
 import xin.qiangshuidiyu.spring.beans.AbstractBeanDefinitionReader;
 import xin.qiangshuidiyu.spring.beans.BeanDefinition;
 import xin.qiangshuidiyu.spring.beans.PropertyValue;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,18 +66,36 @@ public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader
         if (Objects.isNull(component)) {
             return;
         }
+        // 如果使用了别名就使用别名
+        String componentName = component.value().equals("") ? clazz.getSimpleName() : component.value();
+        BeanDefinition beanDefinition = doProcessBeanDefinition(clazz, componentName);
+        for (Method method : clazz.getMethods()) {
+            Bean bean = method.getAnnotation(Bean.class);
+            if(Objects.nonNull(bean)){
+                Class<?> returnType = method.getReturnType();
+                String beanComponentName = bean.value().equals("") ? returnType.getSimpleName() : bean.value();
+                BeanDefinition object = doProcessBeanDefinition(returnType, beanComponentName);
+                //目前没有想到更好的办法
+                BeanReference beanReference = new BeanReference(componentName);
+                MethodReference methodReference = new MethodReference(beanReference, method);
+                object.getPropertyValues().addPropertyValue(new PropertyValue(method.getName(),methodReference));
+            }
+        }
+    }
+
+    private BeanDefinition doProcessBeanDefinition(Class<?> clazz, String componentName) throws Exception {
         // 使用一个beanDefinition来描述这个 bean
         BeanDefinition beanDefinition = new BeanDefinition();
-        beanDefinition.setClassName(className);
+        beanDefinition.setClassName(clazz.getName());
         beanDefinition.setBeanClass(clazz);
 //        beanDefinition.setBean(clazz.newInstance()); //创建bean应该交给工厂
 
-        // 如果使用了别名就使用别名
-        String componentName = component.value().equals("") ? clazz.getSimpleName() : component.value();
         //注册 bean
         registerBean(WordUtils.uncapitalize(componentName), beanDefinition);
         // 加载类的属性到 beanDefinition
         processProperty(beanDefinition);
+
+        return beanDefinition;
     }
 
     /**

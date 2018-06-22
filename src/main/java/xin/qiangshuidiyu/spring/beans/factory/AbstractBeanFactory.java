@@ -1,5 +1,6 @@
 package xin.qiangshuidiyu.spring.beans.factory;
 
+import xin.qiangshuidiyu.spring.aop.BeanPostProcessor;
 import xin.qiangshuidiyu.spring.beans.BeanDefinition;
 import xin.qiangshuidiyu.spring.beans.annotation.Scope;
 
@@ -17,6 +18,16 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
     private final List<String> beanDefinitionNames = new ArrayList<>();
+
+    /**
+     * bean 前后置处理器，最优先实例化
+     */
+    private List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+
+    /**
+     * 需要优先实例化的 bean
+     */
+    private List<String> priorBeanDefinitionNames = new ArrayList<>();
 
 
     @SuppressWarnings("unchecked")
@@ -43,6 +54,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     @Override
     public <T> T getBean(Class<T> clazz) throws Exception {
         List<T> beans = getBeans(clazz);
+        assert !beans.isEmpty() :"没有：" + clazz.getName()+"或其子类";
+
         if(beans.size() == 1){
             return beans.get(0);
         }
@@ -83,7 +96,6 @@ public abstract class AbstractBeanFactory implements BeanFactory {
                 list.add((T) beanDefinition.getBean());
             }
         }
-        assert !list.isEmpty() :"没有：" + clazz.getName()+"或其实例";
         return list;
     }
 
@@ -114,6 +126,12 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return bean;
     }
 
+    /**
+     * 创建实例对象
+     * @param beanDefinition
+     * @return
+     * @throws Exception
+     */
     private Object createBeanInstance(BeanDefinition beanDefinition) throws Exception {
         return beanDefinition.getBeanClass().newInstance();
     }
@@ -123,7 +141,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      * @param name
      * @param beanDefinition
      */
-    public void registerBeanDefintion(String name, BeanDefinition beanDefinition) {
+    public void registerBeanBeanDefinition(String name, BeanDefinition beanDefinition) {
         beanDefinitionMap.put(name, beanDefinition);
         beanDefinitionNames.add(name);
     }
@@ -135,8 +153,40 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      */
     public void preInstantiateSingletons() throws Exception {
         for (String definitionName : beanDefinitionNames) {
-            getBean(definitionName);
+            final Object bean = getBean(definitionName);
+            initializeBean(bean,definitionName);
         }
+    }
+
+
+    /**
+     * 初始化 bean 前后置处理
+     * @param bean
+     * @param beanName
+     * @throws Exception
+     */
+    public void initializeBean(Object bean,String beanName) throws Exception {
+        //处理器不进行处理
+        if(bean instanceof BeanPostProcessor){
+            return;
+        }
+        // bean 前置处理
+        for (BeanPostProcessor beanPostProcessor : this.beanPostProcessors) {
+            beanPostProcessor.postProcessorBeforInittialization(bean,beanName);
+        }
+
+        // bean 后置处理
+        for (BeanPostProcessor beanPostProcessor : this.beanPostProcessors) {
+            beanPostProcessor.postProcessorAfterInittialization(bean,beanName);
+        }
+    }
+
+    /**
+     * 添加bean 前后置处理器
+     * @param beanPostProcessor
+     */
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor){
+        this.beanPostProcessors.add(beanPostProcessor);
     }
 
 

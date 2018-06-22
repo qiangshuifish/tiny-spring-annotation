@@ -23,7 +23,7 @@ public class AnnotationBeanFactoryTest {
         reader.loadDefinitionReader("xin");
 
         for (Map.Entry<String, BeanDefinition> beanDefinitionEntry : reader.getRegistry().entrySet()) {
-            beanFactory.registerBeanDefintion(beanDefinitionEntry.getKey(),beanDefinitionEntry.getValue());
+            beanFactory.registerBeanBeanDefinition(beanDefinitionEntry.getKey(),beanDefinitionEntry.getValue());
         }
 
 

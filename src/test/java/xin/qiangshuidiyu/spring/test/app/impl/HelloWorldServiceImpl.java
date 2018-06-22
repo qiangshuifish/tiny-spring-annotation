@@ -1,5 +1,6 @@
 package xin.qiangshuidiyu.spring.test.app.impl;
 
+import xin.qiangshuidiyu.spring.beans.annotation.Bean;
 import xin.qiangshuidiyu.spring.beans.annotation.Component;
 import xin.qiangshuidiyu.spring.beans.annotation.Scope;
 import xin.qiangshuidiyu.spring.beans.annotation.Value;
@@ -16,6 +17,12 @@ public class HelloWorldServiceImpl implements HelloWorldService {
 
     @Value("${hello-world}")
     private String text;
+
+/*    @Bean
+    public HelloWorld getHelloWorld(){
+        HelloWorld helloWorld = new HelloWorld(text);
+        return helloWorld;
+    }*/
 
     @Resource
     private OutputServiceImpl outputServiceImpl;
