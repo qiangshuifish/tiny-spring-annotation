@@ -1,6 +1,7 @@
 package xin.qiangshuidiyu.spring.aop;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import xin.qiangshuidiyu.spring.aop.aspectj.MethodMatcher;
 
 /**
  * @author wpy
@@ -18,6 +19,11 @@ public class AdvisedSupport {
      */
     private MethodInterceptor methodInterceptor;
 
+    /**
+     * 方法匹配器
+     */
+    private MethodMatcher methodMatcher;
+
     public TargetSource getTargetSource() {
         return targetSource;
     }
@@ -32,5 +38,13 @@ public class AdvisedSupport {
 
     public void setMethodInterceptor(MethodInterceptor methodInterceptor) {
         this.methodInterceptor = methodInterceptor;
+    }
+
+    public MethodMatcher getMethodMatcher() {
+        return methodMatcher;
+    }
+
+    public void setMethodMatcher(MethodMatcher methodMatcher) {
+        this.methodMatcher = methodMatcher;
     }
 }

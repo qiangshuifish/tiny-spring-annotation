@@ -14,7 +14,7 @@ public interface BeanPostProcessor {
      * @return
      * @throws Exception
      */
-    Object postProcessorBeforInittialization(Object bean,String beanName) throws Exception;
+    Object postProcessorBeforeInitialization(Object bean, String beanName) throws Exception;
 
     /**
      * 初始化 bean 的后置处理
@@ -23,5 +23,5 @@ public interface BeanPostProcessor {
      * @return
      * @throws Exception
      */
-    Object postProcessorAfterInittialization(Object bean,String beanName) throws Exception;
+    Object postProcessorAfterInitialization(Object bean, String beanName) throws Exception;
 }

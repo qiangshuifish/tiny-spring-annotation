@@ -172,12 +172,12 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         }
         // bean 前置处理
         for (BeanPostProcessor beanPostProcessor : this.beanPostProcessors) {
-            beanPostProcessor.postProcessorBeforInittialization(bean,beanName);
+            beanPostProcessor.postProcessorBeforeInitialization(bean,beanName);
         }
 
         // bean 后置处理
         for (BeanPostProcessor beanPostProcessor : this.beanPostProcessors) {
-            beanPostProcessor.postProcessorAfterInittialization(bean,beanName);
+            beanPostProcessor.postProcessorAfterInitialization(bean,beanName);
         }
     }
 
